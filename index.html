@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>惠騰內科診所｜看診紅綠燈</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Outfit:wght@400;600;700&display=swap">
+<style>
+/* Layout: one calm column; a printed-calendar grid with hairline rules; each session is a split capsule (1診 | 2診) */
+:root{
+  --bg:#eef2f3; --paper:#ffffff; --ink:#1d2a30; --sub:#5d6d74; --faint:#97a4aa; --rule:#e1e7e9; --tint:#f6f8f8;
+  --accent:#1f5f6b; --accent-soft:#dcebee;
+  --g:#22a05b; --y:#f2b01e; --r:#e04b3f; --k:#22272a; --off:#e8ecee;
+  --sans:"Noto Sans TC","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  --num:"Outfit","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#11181b;--paper:#182226;--ink:#e6eef0;--sub:#9fb0b6;--faint:#647479;--rule:#25333a;--tint:#1c282d;--accent:#7cc3cf;--accent-soft:#1f3a40;--off:#26343a;--k:#000;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#11181b;--paper:#182226;--ink:#e6eef0;--sub:#9fb0b6;--faint:#647479;--rule:#25333a;--tint:#1c282d;--accent:#7cc3cf;--accent-soft:#1f3a40;--off:#26343a;--k:#000;color-scheme:dark}
+*{box-sizing:border-box}
+html{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:820px;margin:0 auto;padding-block:28px 40px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));display:flex;flex-direction:column;gap:18px}
+
+/* masthead */
+.mast{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 20px}
+.eyebrow{font-size:13px;letter-spacing:.18em;color:var(--accent);font-weight:700}
+h1{margin:2px 0 0;font-size:clamp(28px,6vw,40px);font-weight:900;letter-spacing:.06em;line-height:1.15;text-wrap:balance}
+.lede{margin:6px 0 0;color:var(--sub);font-size:15px}
+.range{font-family:var(--num);font-weight:600;font-size:15px;color:var(--accent);background:var(--accent-soft);padding:6px 14px;border-radius:999px;white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* keys */
+.keys{display:flex;flex-wrap:wrap;gap:10px 22px;align-items:center;font-size:14px;color:var(--sub)}
+.keys .sep{width:1px;height:18px;background:var(--rule)}
+.key{display:inline-flex;align-items:center;gap:7px}
+.dot{width:12px;height:12px;border-radius:50%}
+.dot.green{background:var(--g)}.dot.yellow{background:var(--y)}.dot.red{background:var(--r)}.dot.black{background:var(--k);box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+
+/* calendar */
+.calcard{background:var(--paper);border-radius:20px;box-shadow:0 1px 2px rgba(20,40,50,.05),0 8px 24px -12px rgba(20,40,50,.18);overflow:hidden}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr))}
+.wh{font-size:13px;font-weight:700;color:var(--sub);text-align:center;padding:12px 0 10px;border-bottom:1px solid var(--rule);background:var(--tint)}
+.wh.we{color:#c2564c}
+.day{min-height:104px;padding:8px 8px 10px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);display:flex;flex-direction:column;gap:8px;min-width:0}
+.day:nth-child(7n){border-right:0}
+.dh{display:flex;align-items:center;justify-content:space-between;gap:4px}
+.dn{font-family:var(--num);font-weight:600;font-size:16px;font-variant-numeric:tabular-nums;width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%}
+.mo{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.05em}
+.day.out .dn,.day.out .mo{color:var(--faint);opacity:.6}
+.day.today .dn{background:var(--accent);color:var(--paper)}
+.day.closed{background:repeating-linear-gradient(135deg,transparent 0 7px,var(--tint) 7px 14px)}
+.cl{margin:auto;font-size:13px;color:var(--faint);letter-spacing:.2em}
+.sess{display:flex;flex-direction:column;gap:6px;margin-top:auto}
+.ses{display:flex;align-items:center;gap:6px}
+.sl{font-size:12px;color:var(--faint);width:14px;flex:none}
+.pill{flex:1;display:flex;gap:2px;border-radius:999px;overflow:hidden;min-width:0}
+.seg{flex:1;height:24px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:#fff;min-width:0}
+.seg.green{background:var(--g)}.seg.yellow{background:var(--y);color:#3d2c00}.seg.red{background:var(--r)}.seg.black{background:var(--k)}
+.seg.off{background:var(--off)}
+.seg.sub{background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.28) 0 3px,transparent 3px 6px)}
+.seg.demo{flex:none;width:26px;height:22px;border-radius:999px;background:var(--accent)}
+
+[hidden]{display:none!important}
+/* clickable sessions */
+button.seg{border:0;margin:0;padding:0;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:filter .15s}
+button.seg:hover{filter:brightness(1.08)}
+button.seg:focus-visible{outline:3px solid var(--accent);outline-offset:2px;position:relative;z-index:1}
+button.seg.picked{box-shadow:inset 0 0 0 2px var(--paper),inset 0 0 0 4px var(--ink)}
+.tap{font-size:13px;color:var(--accent);font-weight:500}
+/* booking card */
+.sheet-bg{position:fixed;inset:0;background:rgba(15,25,30,.38);z-index:20}
+.sheet{position:fixed;left:50%;transform:translateX(-50%);bottom:max(16px,env(safe-area-inset-bottom,0px));width:min(440px,calc(100% - 32px));background:var(--paper);color:var(--ink);border-radius:22px;padding:20px 20px 18px;z-index:21;box-shadow:0 20px 50px -10px rgba(10,30,40,.45);display:flex;flex-direction:column;gap:12px}
+@media (prefers-reduced-motion:no-preference){.sheet{animation:up .22s ease-out}@keyframes up{from{transform:translate(-50%,16px);opacity:0}to{transform:translate(-50%,0);opacity:1}}}
+.sh-top{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.sh-when{font-size:20px;font-weight:900;letter-spacing:.03em}
+.sh-x{border:0;background:var(--tint);color:var(--sub);width:34px;height:34px;border-radius:50%;font-size:18px;cursor:pointer;flex:none}
+.sh-doc{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:500}
+.sh-tip{margin:0;font-size:14px;color:var(--sub);background:var(--tint);border-radius:12px;padding:10px 12px}
+.sh-tip b{color:var(--ink)}
+.sh-go{display:flex;align-items:center;justify-content:center;gap:8px;text-decoration:none;background:var(--accent);color:#fff;font-weight:700;font-size:16px;letter-spacing:.06em;border-radius:14px;padding:13px 16px}
+.sh-go:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.sh-full{margin:0;font-size:15px;font-weight:700;text-align:center;padding:10px;border-radius:12px;background:var(--tint)}
+
+/* live waiting */
+.wait{background:var(--paper);border-radius:20px;padding:16px 20px;box-shadow:0 1px 2px rgba(20,40,50,.05);display:flex;flex-direction:column;gap:12px}
+.wtitle{font-size:17px;font-weight:700;letter-spacing:.06em;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.wtitle span{font-size:13px;font-weight:400;color:var(--sub);letter-spacing:0;font-variant-numeric:tabular-nums}
+.wrow{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr));gap:10px}
+.wchip{display:flex;align-items:center;gap:10px;background:var(--tint);border-radius:14px;padding:10px 14px;min-width:0}
+.wdoc{font-size:15px;font-weight:500;flex:1;min-width:0}
+.wnum{font-family:var(--num);font-weight:700;font-size:30px;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+.wunit{font-size:14px;color:var(--sub)}
+
+/* explanation */
+.explain{background:var(--paper);border-radius:20px;padding:20px 22px;box-shadow:0 1px 2px rgba(20,40,50,.05)}
+.explain h2{margin:0 0 12px;font-size:17px;letter-spacing:.06em}
+.explain ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px}
+.explain li{display:flex;align-items:center;gap:12px;min-width:0}
+.explain p{margin:0;font-size:15px;color:var(--ink)}
+.cap{flex:none;font-size:14px;font-weight:700;color:#fff;padding:5px 12px;border-radius:999px;letter-spacing:.08em}
+.cap.green{background:var(--g)}.cap.yellow{background:var(--y);color:#3d2c00}.cap.red{background:var(--r)}.cap.black{background:var(--k)}
+.note{margin:14px 0 0;padding-top:12px;border-top:1px dashed var(--rule);font-size:13px;color:var(--sub)}
+footer{text-align:center;font-size:12px;color:var(--faint);font-variant-numeric:tabular-nums}
+
+@media (max-width:620px){
+  .wrap{padding-block:20px 32px;gap:14px}
+  .day{min-height:82px;padding:5px 3px 6px;gap:4px}
+  .dn{font-size:14px;width:24px;height:24px}
+  .mo{display:none}
+  .sl{display:none}
+  .ses{gap:0}
+  .sess{gap:4px}
+  .seg{height:20px;font-size:11px}
+  .keys{gap:8px 14px;font-size:13px}
+  .keys .sep{display:none}
+  .explain{padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="mast">
+    <div>
+      <div class="eyebrow">惠騰內科診所</div>
+      <h1>看診紅綠燈</h1>
+      <p class="lede">各診掛號人數一覽，挑綠燈的時段來看診。</p>
+    </div>
+    <span class="range">11/26 – 12/26</span>
+  </div>
+  <div class="keys"><span class='key'><span class='dot green'></span>綠燈</span><span class='key'><span class='dot yellow'></span>黃燈</span><span class='key'><span class='dot red'></span>紅燈</span><span class='key'><span class='dot black'></span>黑燈</span><span class="sep"></span><span class='key'><span class='seg demo'>蔡</span>1診・蔡依靜 醫師</span><span class='key'><span class='seg demo'>徐</span>2診・徐盛邦 醫師</span></div>
+  <section class='wait'><div class='wtitle'>目前候診<span>上午 · 12:10 更新</span></div><div class='wrow'><div class='wchip'><span class='seg demo'>徐</span><span class='wdoc'>徐盛邦 醫師</span><span class='wnum'>0</span><span class='wunit'>位</span></div></div></section>
+  <p class="tap">點日曆上的色塊，可以看掛號提示並前往網路掛號。</p>
+  <div class="calcard"><div class="cal"><div class='wh we'>日</div><div class='wh'>一</div><div class='wh'>二</div><div class='wh'>三</div><div class='wh'>四</div><div class='wh'>五</div><div class='wh we'>六</div><div class='day out'><div class='dh'><span class='dn'>22</span><span class='mo'>11月</span></div></div><div class='day out'><div class='dh'><span class='dn'>23</span></div></div><div class='day out'><div class='dh'><span class='dn'>24</span></div></div><div class='day out'><div class='dh'><span class='dn'>25</span></div></div><div class='day today'><div class='dh'><span class='dn'>26</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><span class='seg off'></span><button type='button' class='seg black' title='2診 徐盛邦 醫師 上午：黑燈' aria-label='2診 徐盛邦 醫師 上午：黑燈' data-date='2026-11-26' data-dl='11/26（四）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='black' data-ln='黑燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 下午：綠燈' aria-label='1診 蔡依靜 醫師 下午：綠燈' data-date='2026-11-26' data-dl='11/26（四）' data-sec='T' data-sn='下午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><span class='seg off'></span></div></div></div></div><div class='day'><div class='dh'><span class='dn'>27</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><span class='seg off'></span><button type='button' class='seg red' title='2診 徐盛邦 醫師 上午：紅燈' aria-label='2診 徐盛邦 醫師 上午：紅燈' data-date='2026-11-27' data-dl='11/27（五）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='red' data-ln='紅燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><button type='button' class='seg red' title='2診 徐盛邦 醫師 下午：紅燈' aria-label='2診 徐盛邦 醫師 下午：紅燈' data-date='2026-11-27' data-dl='11/27（五）' data-sec='T' data-sn='下午' data-doc='徐盛邦' data-light='red' data-ln='紅燈'>徐</button></div></div></div></div><div class='day closed'><div class='dh'><span class='dn'>28</span></div><div class='cl'>休診</div></div><div class='day closed'><div class='dh'><span class='dn'>29</span></div><div class='cl'>休診</div></div><div class='day'><div class='dh'><span class='dn'>30</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 上午：綠燈' aria-label='1診 蔡依靜 醫師 上午：綠燈' data-date='2026-11-30' data-dl='11/30（一）' data-sec='S' data-sn='上午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg yellow' title='2診 徐盛邦 醫師 上午：黃燈' aria-label='2診 徐盛邦 醫師 上午：黃燈' data-date='2026-11-30' data-dl='11/30（一）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='yellow' data-ln='黃燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><button type='button' class='seg yellow' title='2診 徐盛邦 醫師 下午：黃燈' aria-label='2診 徐盛邦 醫師 下午：黃燈' data-date='2026-11-30' data-dl='11/30（一）' data-sec='T' data-sn='下午' data-doc='徐盛邦' data-light='yellow' data-ln='黃燈'>徐</button></div></div></div></div><div class='day'><div class='dh'><span class='dn'>1</span><span class='mo'>12月</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 上午：綠燈' aria-label='1診 蔡依靜 醫師 上午：綠燈' data-date='2026-12-01' data-dl='12/1（二）' data-sec='S' data-sn='上午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-01' data-dl='12/1（二）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 下午：綠燈' aria-label='1診 蔡依靜 醫師 下午：綠燈' data-date='2026-12-01' data-dl='12/1（二）' data-sec='T' data-sn='下午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><span class='seg off'></span></div></div></div></div><div class='day'><div class='dh'><span class='dn'>2</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 上午：綠燈' aria-label='1診 蔡依靜 醫師 上午：綠燈' data-date='2026-12-02' data-dl='12/2（三）' data-sec='S' data-sn='上午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-02' data-dl='12/2（三）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><span class='seg off'></span></div></div></div></div><div class='day'><div class='dh'><span class='dn'>3</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><span class='seg off'></span><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-03' data-dl='12/3（四）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 下午：綠燈' aria-label='1診 蔡依靜 醫師 下午：綠燈' data-date='2026-12-03' data-dl='12/3（四）' data-sec='T' data-sn='下午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><span class='seg off'></span></div></div></div></div><div class='day'><div class='dh'><span class='dn'>4</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><span class='seg off'></span><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-04' data-dl='12/4（五）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><button type='button' class='seg green' title='2診 徐盛邦 醫師 下午：綠燈' aria-label='2診 徐盛邦 醫師 下午：綠燈' data-date='2026-12-04' data-dl='12/4（五）' data-sec='T' data-sn='下午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div></div></div><div class='day'><div class='dh'><span class='dn'>5</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 上午：綠燈' aria-label='1診 蔡依靜 醫師 上午：綠燈' data-date='2026-12-05' data-dl='12/5（六）' data-sec='S' data-sn='上午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg black' title='2診 徐盛邦 醫師 上午：黑燈' aria-label='2診 徐盛邦 醫師 上午：黑燈' data-date='2026-12-05' data-dl='12/5（六）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='black' data-ln='黑燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><span class='seg off'></span></div></div></div></div><div class='day closed'><div class='dh'><span class='dn'>6</span></div><div class='cl'>休診</div></div><div class='day'><div class='dh'><span class='dn'>7</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 上午：綠燈' aria-label='1診 蔡依靜 醫師 上午：綠燈' data-date='2026-12-07' data-dl='12/7（一）' data-sec='S' data-sn='上午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg yellow' title='2診 徐盛邦 醫師 上午：黃燈' aria-label='2診 徐盛邦 醫師 上午：黃燈' data-date='2026-12-07' data-dl='12/7（一）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='yellow' data-ln='黃燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><button type='button' class='seg green' title='2診 徐盛邦 醫師 下午：綠燈' aria-label='2診 徐盛邦 醫師 下午：綠燈' data-date='2026-12-07' data-dl='12/7（一）' data-sec='T' data-sn='下午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div></div></div><div class='day'><div class='dh'><span class='dn'>8</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 上午：綠燈' aria-label='1診 蔡依靜 醫師 上午：綠燈' data-date='2026-12-08' data-dl='12/8（二）' data-sec='S' data-sn='上午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg yellow' title='2診 徐盛邦 醫師 上午：黃燈' aria-label='2診 徐盛邦 醫師 上午：黃燈' data-date='2026-12-08' data-dl='12/8（二）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='yellow' data-ln='黃燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 下午：綠燈' aria-label='1診 蔡依靜 醫師 下午：綠燈' data-date='2026-12-08' data-dl='12/8（二）' data-sec='T' data-sn='下午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><span class='seg off'></span></div></div></div></div><div class='day'><div class='dh'><span class='dn'>9</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 上午：綠燈' aria-label='1診 蔡依靜 醫師 上午：綠燈' data-date='2026-12-09' data-dl='12/9（三）' data-sec='S' data-sn='上午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-09' data-dl='12/9（三）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><span class='seg off'></span></div></div></div></div><div class='day'><div class='dh'><span class='dn'>10</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><span class='seg off'></span><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-10' data-dl='12/10（四）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 下午：綠燈' aria-label='1診 蔡依靜 醫師 下午：綠燈' data-date='2026-12-10' data-dl='12/10（四）' data-sec='T' data-sn='下午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><span class='seg off'></span></div></div></div></div><div class='day'><div class='dh'><span class='dn'>11</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><span class='seg off'></span><button type='button' class='seg yellow' title='2診 徐盛邦 醫師 上午：黃燈' aria-label='2診 徐盛邦 醫師 上午：黃燈' data-date='2026-12-11' data-dl='12/11（五）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='yellow' data-ln='黃燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><button type='button' class='seg yellow' title='2診 徐盛邦 醫師 下午：黃燈' aria-label='2診 徐盛邦 醫師 下午：黃燈' data-date='2026-12-11' data-dl='12/11（五）' data-sec='T' data-sn='下午' data-doc='徐盛邦' data-light='yellow' data-ln='黃燈'>徐</button></div></div></div></div><div class='day'><div class='dh'><span class='dn'>12</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><span class='seg off'></span><button type='button' class='seg yellow' title='2診 徐盛邦 醫師 上午：黃燈' aria-label='2診 徐盛邦 醫師 上午：黃燈' data-date='2026-12-12' data-dl='12/12（六）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='yellow' data-ln='黃燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><span class='seg off'></span></div></div></div></div><div class='day closed'><div class='dh'><span class='dn'>13</span></div><div class='cl'>休診</div></div><div class='day'><div class='dh'><span class='dn'>14</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 上午：綠燈' aria-label='1診 蔡依靜 醫師 上午：綠燈' data-date='2026-12-14' data-dl='12/14（一）' data-sec='S' data-sn='上午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-14' data-dl='12/14（一）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><button type='button' class='seg green' title='2診 徐盛邦 醫師 下午：綠燈' aria-label='2診 徐盛邦 醫師 下午：綠燈' data-date='2026-12-14' data-dl='12/14（一）' data-sec='T' data-sn='下午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div></div></div><div class='day'><div class='dh'><span class='dn'>15</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 上午：綠燈' aria-label='1診 蔡依靜 醫師 上午：綠燈' data-date='2026-12-15' data-dl='12/15（二）' data-sec='S' data-sn='上午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-15' data-dl='12/15（二）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 下午：綠燈' aria-label='1診 蔡依靜 醫師 下午：綠燈' data-date='2026-12-15' data-dl='12/15（二）' data-sec='T' data-sn='下午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><span class='seg off'></span></div></div></div></div><div class='day'><div class='dh'><span class='dn'>16</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 上午：綠燈' aria-label='1診 蔡依靜 醫師 上午：綠燈' data-date='2026-12-16' data-dl='12/16（三）' data-sec='S' data-sn='上午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-16' data-dl='12/16（三）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><span class='seg off'></span></div></div></div></div><div class='day'><div class='dh'><span class='dn'>17</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><span class='seg off'></span><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-17' data-dl='12/17（四）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 下午：綠燈' aria-label='1診 蔡依靜 醫師 下午：綠燈' data-date='2026-12-17' data-dl='12/17（四）' data-sec='T' data-sn='下午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><span class='seg off'></span></div></div></div></div><div class='day'><div class='dh'><span class='dn'>18</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><span class='seg off'></span><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-18' data-dl='12/18（五）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><button type='button' class='seg green' title='2診 徐盛邦 醫師 下午：綠燈' aria-label='2診 徐盛邦 醫師 下午：綠燈' data-date='2026-12-18' data-dl='12/18（五）' data-sec='T' data-sn='下午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div></div></div><div class='day'><div class='dh'><span class='dn'>19</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 上午：綠燈' aria-label='1診 蔡依靜 醫師 上午：綠燈' data-date='2026-12-19' data-dl='12/19（六）' data-sec='S' data-sn='上午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-19' data-dl='12/19（六）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><span class='seg off'></span></div></div></div></div><div class='day closed'><div class='dh'><span class='dn'>20</span></div><div class='cl'>休診</div></div><div class='day'><div class='dh'><span class='dn'>21</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 上午：綠燈' aria-label='1診 蔡依靜 醫師 上午：綠燈' data-date='2026-12-21' data-dl='12/21（一）' data-sec='S' data-sn='上午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-21' data-dl='12/21（一）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><button type='button' class='seg green' title='2診 徐盛邦 醫師 下午：綠燈' aria-label='2診 徐盛邦 醫師 下午：綠燈' data-date='2026-12-21' data-dl='12/21（一）' data-sec='T' data-sn='下午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div></div></div><div class='day'><div class='dh'><span class='dn'>22</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 上午：綠燈' aria-label='1診 蔡依靜 醫師 上午：綠燈' data-date='2026-12-22' data-dl='12/22（二）' data-sec='S' data-sn='上午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-22' data-dl='12/22（二）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 下午：綠燈' aria-label='1診 蔡依靜 醫師 下午：綠燈' data-date='2026-12-22' data-dl='12/22（二）' data-sec='T' data-sn='下午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><span class='seg off'></span></div></div></div></div><div class='day'><div class='dh'><span class='dn'>23</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 上午：綠燈' aria-label='1診 蔡依靜 醫師 上午：綠燈' data-date='2026-12-23' data-dl='12/23（三）' data-sec='S' data-sn='上午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-23' data-dl='12/23（三）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><span class='seg off'></span></div></div></div></div><div class='day'><div class='dh'><span class='dn'>24</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><span class='seg off'></span><button type='button' class='seg yellow' title='2診 徐盛邦 醫師 上午：黃燈' aria-label='2診 徐盛邦 醫師 上午：黃燈' data-date='2026-12-24' data-dl='12/24（四）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='yellow' data-ln='黃燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><button type='button' class='seg green' title='1診 蔡依靜 醫師 下午：綠燈' aria-label='1診 蔡依靜 醫師 下午：綠燈' data-date='2026-12-24' data-dl='12/24（四）' data-sec='T' data-sn='下午' data-doc='蔡依靜' data-light='green' data-ln='綠燈'>蔡</button><button type='button' class='seg yellow' title='2診 徐盛邦 醫師 下午：黃燈' aria-label='2診 徐盛邦 醫師 下午：黃燈' data-date='2026-12-24' data-dl='12/24（四）' data-sec='T' data-sn='下午' data-doc='徐盛邦' data-light='yellow' data-ln='黃燈'>徐</button></div></div></div></div><div class='day closed'><div class='dh'><span class='dn'>25</span></div><div class='cl'>休診</div></div><div class='day'><div class='dh'><span class='dn'>26</span></div><div class='sess'><div class='ses'><span class='sl'>早</span><div class='pill'><span class='seg off'></span><button type='button' class='seg green' title='2診 徐盛邦 醫師 上午：綠燈' aria-label='2診 徐盛邦 醫師 上午：綠燈' data-date='2026-12-26' data-dl='12/26（六）' data-sec='S' data-sn='上午' data-doc='徐盛邦' data-light='green' data-ln='綠燈'>徐</button></div></div><div class='ses'><span class='sl'>午</span><div class='pill'><span class='seg off'></span><span class='seg off'></span></div></div></div></div></div></div>
+  <section class="explain">
+    <h2>燈號說明</h2>
+    <ul><li><span class='cap green'>綠燈</span><p>掛號人數少，最推薦。</p></li><li><span class='cap yellow'>黃燈</span><p>掛號人數普通。</p></li><li><span class='cap red'>紅燈</span><p>掛號人數多，建議改選綠燈時段。</p></li><li><span class='cap black'>黑燈</span><p>已額滿止掛，請改選其他時段。</p></li></ul>
+    <p class="note">每天上排是早上、下排是下午；色塊裡的字是醫師的姓，灰色表示該診休診，帶斜紋表示由其他醫師代診。燈號依目前預約與掛號人數計算，僅供參考，實際以現場為準。</p>
+  </section>
+  <footer>最後更新 2026-11-26 12:10</footer>
+</div>
+<div class="sheet-bg" id="sheetBg" hidden></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="shWhen" hidden>
+  <div class="sh-top"><span class="sh-when" id="shWhen"></span><button type="button" class="sh-x" id="shX" aria-label="關閉">✕</button></div>
+  <div class="sh-doc" id="shDoc"></div>
+  <div id="shBody"></div>
+</div>
+<script>
+(function(){
+  var BOOK = "https://pinmed.co/clinic/rztefkll/his-booking/form", BOOK_LINE = "https://q.1talk.co/pryXj", END = { S: "12:00", T: "18:30" };
+  var url = /\bLine\//i.test(navigator.userAgent) ? BOOK_LINE : BOOK;
+  var bg = document.getElementById('sheetBg'), sh = document.getElementById('sheet');
+  var when = document.getElementById('shWhen'), docEl = document.getElementById('shDoc'), body = document.getElementById('shBody');
+  var last = null;
+  function esc(s){ var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+  function isPast(date, sec){
+    var t = (END[sec] || '23:59').split(':');
+    var p = date.split('-');
+    var end = new Date(+p[0], +p[1] - 1, +p[2], +t[0], +t[1]);
+    return Date.now() > end.getTime();
+  }
+  function open(b){
+    if (last) last.classList.remove('picked');
+    last = b; b.classList.add('picked');
+    var d = b.dataset, slot = d.dl + ' ' + d.sn;
+    when.textContent = slot;
+    docEl.innerHTML = '<span class="seg ' + esc(d.light) + '" style="flex:none;width:30px;height:26px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:700">' + esc(d.doc.charAt(0)) + '</span>' + esc(d.doc) + ' 醫師 <span class="cap ' + esc(d.light) + '" style="margin-left:auto">' + esc(d.ln) + '</span>';
+    if (isPast(d.date, d.sec)) {
+      body.innerHTML = '<p class="sh-full">這個時段已經結束，請改選其他時段。</p>';
+    } else if (d.light === 'black') {
+      body.innerHTML = '<p class="sh-full">已額滿，請改選其他時段。</p>';
+    } else {
+      body.innerHTML = '<p class="sh-tip">到掛號頁後，請選擇<br><b>' + esc(slot) + '　' + esc(d.doc) + ' 醫師</b></p>' +
+        '<a class="sh-go" href="' + esc(url) + '" target="_blank" rel="noopener">前往網路掛號 ›</a>';
+    }
+    bg.hidden = false; sh.hidden = false;
+    document.getElementById('shX').focus();
+  }
+  function close(){
+    bg.hidden = true; sh.hidden = true;
+    if (last) { last.classList.remove('picked'); last.focus(); }
+  }
+  document.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('button.seg');
+    if (b) open(b);
+  });
+  bg.addEventListener('click', close);
+  document.getElementById('shX').addEventListener('click', close);
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !sh.hidden) close(); });
+})();
+</script>
+</body>
+</html>
